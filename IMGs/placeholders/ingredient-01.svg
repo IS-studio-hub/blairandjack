@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800">
+  <rect width="800" height="800" fill="#c9d6d0"/>
+  <circle cx="544.0" cy="256.0" r="144.0" fill="#8aa89d" opacity="0.35"/><circle cx="224.00000000000003" cy="576.0" r="96.0" fill="#8aa89d" opacity="0.22"/>
+  <text x="400.0" y="392.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="14" letter-spacing="1" fill="#0c0b0b" opacity="0.7">REPLACE</text>
+  <text x="400.0" y="416.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#0c0b0b" opacity="0.55">ingredient-01.jpg</text>
+</svg>
