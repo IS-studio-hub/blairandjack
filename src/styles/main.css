@@ -118,6 +118,8 @@ i {
   font-size: clamp(20px, 2.05vw, 28px);
   line-height: 1.4;
   letter-spacing: -0.022em;
+  width: 100%;
+  min-width: 0;
 }
 
 .section-name {
@@ -473,7 +475,7 @@ html.is-loading body {
   height: auto;
   min-height: 0;
   background: var(--cream);
-  overflow: visible;
+  overflow: hidden;
 }
 
 .first-act {
@@ -513,6 +515,21 @@ html.is-loading body {
   max-width: 14ch;
   align-self: start;
   font-size: clamp(42px, 6.4vw, 92px);
+}
+
+.hero-line {
+  display: block;
+  overflow: hidden;
+}
+
+.hero-line-inner {
+  display: block;
+  will-change: transform;
+}
+
+.hero-word,
+.hero-sp {
+  display: inline;
 }
 
 .hero-copy {

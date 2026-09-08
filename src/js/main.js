@@ -19,6 +19,7 @@ initCommunityCards();
 if (page === "home") {
   initProductScroll();
   runPreloader().then(() => {
+    initHeroText();
     initVideo();
     initHomeVideoExpand();
     initStats();
@@ -482,6 +483,152 @@ function initDifferent() {
     numbers: root.querySelector(".diff-index .numbers"),
     prev: root.querySelector(".prev"),
     next: root.querySelector(".next"),
+  });
+}
+
+function splitHeroLines(el, { hardBreaksOnly = false } = {}) {
+  if (!el) return [];
+  if (!el.dataset.lineSource) el.dataset.lineSource = el.innerHTML;
+  el.innerHTML = el.dataset.lineSource;
+
+  const tokens = [];
+  const addText = (text, italic) => {
+    String(text)
+      .split(/(\s+)/)
+      .forEach((part) => {
+        if (!part) return;
+        const span = document.createElement("span");
+        span.className = part.trim() ? "hero-word" : "hero-sp";
+        if (italic) {
+          const i = document.createElement("i");
+          i.textContent = part;
+          span.append(i);
+        } else {
+          span.textContent = part;
+        }
+        tokens.push(span);
+      });
+  };
+
+  const walk = (root) => {
+    [...root.childNodes].forEach((node) => {
+      if (node.nodeType === Node.TEXT_NODE) addText(node.textContent, false);
+      else if (node.nodeName === "BR") tokens.push(document.createElement("br"));
+      else if (node.nodeName === "I") addText(node.textContent, true);
+      else walk(node);
+    });
+  };
+
+  walk(el);
+  el.style.width = "100%";
+  el.replaceChildren(...tokens);
+  void el.offsetWidth;
+
+  const lines = [];
+  let bucket = [];
+  let lastTop = null;
+  const flush = () => {
+    if (bucket.length) lines.push(bucket);
+    bucket = [];
+    lastTop = null;
+  };
+
+  tokens.forEach((tok) => {
+    if (tok.tagName === "BR") {
+      flush();
+      tok.remove();
+      return;
+    }
+    if (!tok.classList.contains("hero-word")) {
+      if (bucket.length) bucket.push(tok);
+      return;
+    }
+    if (!hardBreaksOnly) {
+      const top = Math.round(tok.getBoundingClientRect().top);
+      if (lastTop !== null && top > lastTop + 2) flush();
+      lastTop = top;
+    }
+    bucket.push(tok);
+  });
+  flush();
+
+  const wrapped = lines
+    .map((parts) => {
+      while (parts[0]?.classList.contains("hero-sp")) parts.shift();
+      while (parts.at(-1)?.classList.contains("hero-sp")) parts.pop();
+      if (!parts.length) return null;
+      const line = document.createElement("span");
+      line.className = "hero-line";
+      const inner = document.createElement("span");
+      inner.className = "hero-line-inner";
+      parts.forEach((part) => inner.append(part));
+      line.append(inner);
+      return line;
+    })
+    .filter(Boolean);
+
+  el.replaceChildren(...wrapped);
+  return [...el.querySelectorAll(".hero-line-inner")];
+}
+
+function initHeroText() {
+  const hero = document.querySelector(".hero");
+  if (!hero) return;
+
+  const title = hero.querySelector("h1");
+  const copy = hero.querySelector(".hero-copy .body-lg");
+  const cta = hero.querySelector(".hero-copy .cta");
+  let tl;
+
+  const maskCta = () => {
+    if (!cta) return null;
+    const existing = cta.closest(".hero-line-inner");
+    if (existing) return existing;
+    const line = document.createElement("span");
+    line.className = "hero-line";
+    const inner = document.createElement("span");
+    inner.className = "hero-line-inner";
+    cta.replaceWith(line);
+    inner.append(cta);
+    line.append(inner);
+    hero.querySelector(".hero-copy")?.append(line);
+    return inner;
+  };
+
+  const build = () => {
+    tl?.scrollTrigger?.kill();
+    tl?.kill();
+
+    const lines = [
+      ...splitHeroLines(title, { hardBreaksOnly: true }),
+      ...splitHeroLines(copy),
+      maskCta(),
+    ].filter(Boolean);
+    if (!lines.length) return;
+
+    gsap.set(lines, { yPercent: 118 });
+    tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: hero,
+        start: "top 82%",
+        end: "bottom 24%",
+        toggleActions: "play reverse play reverse",
+        invalidateOnRefresh: true,
+      },
+    });
+    tl.to(lines, {
+      yPercent: 0,
+      duration: 1,
+      stagger: 0.1,
+      ease: "expo.out",
+    });
+  };
+
+  build();
+  let resizeTimer;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(build, 160);
   });
 }
 
