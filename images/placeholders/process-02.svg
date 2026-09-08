@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <rect width="1200" height="800" fill="#d7cfc2"/>
+  <circle cx="816.0000000000001" cy="256.0" r="144.0" fill="#b8a48c" opacity="0.35"/><circle cx="336.00000000000006" cy="576.0" r="96.0" fill="#b8a48c" opacity="0.22"/>
+  <text x="600.0" y="392.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="14" letter-spacing="1" fill="#0c0b0b" opacity="0.7">REPLACE</text>
+  <text x="600.0" y="416.0" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#0c0b0b" opacity="0.55">process-02.jpg</text>
+</svg>
