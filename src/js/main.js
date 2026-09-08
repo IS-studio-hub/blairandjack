@@ -14,6 +14,7 @@ initAccordion();
 initDifferent();
 initPagers();
 initScrollHints();
+initCommunityCards();
 
 if (page === "home") {
   initProductScroll();
@@ -481,6 +482,30 @@ function initDifferent() {
     numbers: root.querySelector(".diff-index .numbers"),
     prev: root.querySelector(".prev"),
     next: root.querySelector(".next"),
+  });
+}
+
+function initCommunityCards() {
+  document.querySelectorAll(".sci-community").forEach((section) => {
+    const cards = [...section.querySelectorAll(".sci-person")];
+    if (!cards.length) return;
+
+    gsap.set(cards, { x: 160 });
+
+    gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: "top 74%",
+        end: "bottom 32%",
+        toggleActions: "play reverse play reverse",
+        invalidateOnRefresh: true,
+      },
+    }).to(cards, {
+      x: 0,
+      duration: 0.8,
+      stagger: 0.16,
+      ease: "power3.out",
+    });
   });
 }
 
